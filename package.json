@@ -1,0 +1,11 @@
+{
+  "name": "@nowifi4u/utils",
+  "version": "1.0.1",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "nowifi4u",
+  "license": "Apache-2.0"
+}
