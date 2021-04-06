@@ -1,11 +1,18 @@
 {
   "name": "@nowifi4u/utils",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "nowifi4u",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "jshint": "^2.12.0"
+  },
+  "devDependencies": {
+    "@types/node": "^12.7.3",
+    "eslint": "^6.8.0"
+  }
 }
