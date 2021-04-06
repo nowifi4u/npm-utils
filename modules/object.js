@@ -30,7 +30,7 @@ exports.assignDeepCheck = function(target, ...sources) {
 		for(const key in source) {
 			if(isObject(source[key])) {
 				if(!(key in target)) {
-					if(!isObject(target[key])) throw new Error('Source value is object when target value is not');
+					if(!isObject(target[key]) && target[key] !== undefined) throw new Error('Source value is object when target value is not');
 					Object.assign(target, { [key]: source[key] });
 				} else {
 					exports.assignDeepCheck(target[key], source[key]);
@@ -74,7 +74,7 @@ exports.mergeDeepCheck = function(...sources) {
 		for(const key in source) {
 			if(isObject(source[key])) {
 				if(!(key in output)) {
-					if(!isObject(output[key])) throw new Error('Source value is object when target value is not');
+					if(!isObject(output[key]) && output[key] !== undefined) throw new Error('Source value is object when target value is not');
 					Object.assign(output, { [key]: source[key] });
 				} else {
 					output[key] = exports.mergeDeepCheck(output[key], source[key]);
