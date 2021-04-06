@@ -8,47 +8,39 @@ exports.hasOwnProperty = function(target, key) {
 };
 
 exports.assignDeep = function(target, ...sources) {
-	if(isObject(target)) {
-		sources.forEach(source => {
-			if(isObject(source)) {
-				for(const key in source) {
-					if(isObject(source[key])) {
-						if(!(key in target)) {
-							Object.assign(target, { [key]: source[key] });
-						} else {
-							exports.assignDeep(target[key], source[key]);
-						}
-					} else {
-						Object.assign(target, { [key]: source[key] });
-					}
+	sources.forEach(source => {
+		for(const key in source) {
+			if(isObject(source[key])) {
+				if(!(key in target)) {
+					Object.assign(target, { [key]: source[key] });
+				} else {
+					exports.assignDeep(target[key], source[key]);
 				}
+			} else {
+				Object.assign(target, { [key]: source[key] });
 			}
-		});
-	}
+		}
+	});
 
 	return target;
 };
 
 exports.assignDeepCheck = function(target, ...sources) {
-	if(isObject(target)) {
-		sources.forEach(source => {
-			if(isObject(source)) {
-				for(const key in source) {
-					if(isObject(source[key])) {
-						if(!(key in target)) {
-							if(!isObject(target[key])) throw new Error('Source value is object when target value is not');
-							Object.assign(target, { [key]: source[key] });
-						} else {
-							exports.assignDeepCheck(target[key], source[key]);
-						}
-					} else {
-						if(isObject(target[key])) throw new Error('Source value is not object when target value is');
-						Object.assign(target, { [key]: source[key] });
-					}
+	sources.forEach(source => {
+		for(const key in source) {
+			if(isObject(source[key])) {
+				if(!(key in target)) {
+					if(!isObject(target[key])) throw new Error('Source value is object when target value is not');
+					Object.assign(target, { [key]: source[key] });
+				} else {
+					exports.assignDeepCheck(target[key], source[key]);
 				}
+			} else {
+				if(isObject(target[key])) throw new Error('Source value is not object when target value is');
+				Object.assign(target, { [key]: source[key] });
 			}
-		});
-	}
+		}
+	});
 
 	return target;
 };
@@ -60,17 +52,15 @@ exports.merge = function(...sources) {
 exports.mergeDeep = function(...sources) {
 	const output = {};
 	sources.forEach(source => {
-		if(isObject(source)) {
-			for(const key in source) {
-				if(isObject(source[key])) {
-					if(!(key in output)) {
-						Object.assign(output, { [key]: source[key] });
-					} else {
-						output[key] = exports.mergeDeep(output[key], source[key]);
-					}
-				} else {
+		for(const key in source) {
+			if(isObject(source[key])) {
+				if(!(key in output)) {
 					Object.assign(output, { [key]: source[key] });
+				} else {
+					output[key] = exports.mergeDeep(output[key], source[key]);
 				}
+			} else {
+				Object.assign(output, { [key]: source[key] });
 			}
 		}
 	});
@@ -81,19 +71,17 @@ exports.mergeDeep = function(...sources) {
 exports.mergeDeepCheck = function(...sources) {
 	const output = {};
 	sources.forEach(source => {
-		if(isObject(source)) {
-			for(const key in source) {
-				if(isObject(source[key])) {
-					if(!(key in output)) {
-						if(!isObject(output[key])) throw new Error('Source value is object when target value is not');
-						Object.assign(output, { [key]: source[key] });
-					} else {
-						output[key] = exports.mergeDeepCheck(output[key], source[key]);
-					}
-				} else {
-					if(isObject(output[key])) throw new Error('Source value is not object when target value is');
+		for(const key in source) {
+			if(isObject(source[key])) {
+				if(!(key in output)) {
+					if(!isObject(output[key])) throw new Error('Source value is object when target value is not');
 					Object.assign(output, { [key]: source[key] });
+				} else {
+					output[key] = exports.mergeDeepCheck(output[key], source[key]);
 				}
+			} else {
+				if(isObject(output[key])) throw new Error('Source value is not object when target value is');
+				Object.assign(output, { [key]: source[key] });
 			}
 		}
 	});
