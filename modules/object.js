@@ -157,6 +157,7 @@ exports.mapKeys = function(source, fnMap) {
 			}
 		}
 	}
+	return output;
 };
 
 exports.filterKeys = function(source, fnFilter) {
@@ -168,6 +169,7 @@ exports.filterKeys = function(source, fnFilter) {
 			}
 		}
 	}
+	return output;
 };
 
 exports.filterMapKeys = function(source, fnMap, fnFilter) {
@@ -180,6 +182,7 @@ exports.filterMapKeys = function(source, fnMap, fnFilter) {
 			}
 		}
 	}
+	return output;
 };
 
 exports.mapInKeys = function(source, keyMap = {}) {
@@ -193,6 +196,7 @@ exports.mapInKeys = function(source, keyMap = {}) {
 			}
 		}
 	}
+	return output;
 };
 
 exports.filterInKeys = function(source, keyMap = {}) {
@@ -204,6 +208,7 @@ exports.filterInKeys = function(source, keyMap = {}) {
 			}
 		}
 	}
+	return output;
 };
 
 exports.filterMapInKeys = function(source, keyMap = {}) {
@@ -215,6 +220,7 @@ exports.filterMapInKeys = function(source, keyMap = {}) {
 			}
 		}
 	}
+	return output;
 };
 
 function _filterDeep(source, fnFilter) {
@@ -277,7 +283,6 @@ exports.flattenObject = function(source) {
 			result[key] = source[key];
 		}
 	}
-
 	return result;
 };
 
