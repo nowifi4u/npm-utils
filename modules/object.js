@@ -9,11 +9,12 @@ exports.hasOwnProperty = function(target, key) {
 
 function _impl_assignDeep(target, source) {
 	for(const key in source) {
+		if(!exports.hasOwnProperty(source, key)) continue;
 		if(isObject(source[key])) {
 			if(!(key in target)) {
 				Object.assign(target, { [key]: source[key] });
 			} else {
-				exports.assignDeep(target[key], source[key]);
+				_impl_assignDeep(target[key], source[key]);
 			}
 		} else {
 			Object.assign(target, { [key]: source[key] });
@@ -35,12 +36,13 @@ exports.assignDeep = function(target, ...sources) {
 
 function _impl_assignDeepCheck(target, source) {
 	for(const key in source) {
+		if(!exports.hasOwnProperty(source, key)) continue;
 		if(isObject(source[key])) {
 			if(!(key in target)) {
 				if(!isObject(target[key]) && target[key] !== undefined) throw new Error('Source value is object when target value is not');
 				Object.assign(target, { [key]: source[key] });
 			} else {
-				exports.assignDeepCheck(target[key], source[key]);
+				_impl_assignDeepCheck(target[key], source[key]);
 			}
 		} else {
 			if(isObject(target[key])) throw new Error('Source value is not object when target value is');
@@ -74,6 +76,7 @@ exports.mergeDeep = function(...sources) {
 	sources.forEach(source => {
 		if(isObject(source)) {
 			for(const key in source) {
+				if(!exports.hasOwnProperty(source, key)) continue;
 				if(isObject(source[key])) {
 					if(!(key in output)) {
 						Object.assign(output, { [key]: source[key] });
@@ -95,6 +98,7 @@ exports.mergeDeepCheck = function(...sources) {
 	sources.forEach(source => {
 		if(isObject(source)) {
 			for(const key in source) {
+				if(!exports.hasOwnProperty(source, key)) continue;
 				if(isObject(source[key])) {
 					if(!(key in output)) {
 						if(!isObject(output[key]) && output[key] !== undefined) throw new Error('Source value is object when target value is not');
@@ -113,17 +117,19 @@ exports.mergeDeepCheck = function(...sources) {
 	return output;
 };
 
-exports.map = function(source, fnMap) {
+exports.map = function(source, fnMap = val => val) {
 	const output = new source.constructor();
 	for(const key in source) {
+		if(!exports.hasOwnProperty(source, key)) continue;
 		Object.assign(output, { [key]: fnMap(source[key]) });
 	}
 	return output;
 };
 
-exports.filter = function(source, fnBool) {
+exports.filter = function(source, fnBool = () => true) {
 	const output = new source.constructor();
 	for(const key in source) {
+		if(!exports.hasOwnProperty(source, key)) continue;
 		if(fnBool(source[key])) {
 			Object.assign(output, { [key]: source[key] });
 		}
@@ -131,19 +137,21 @@ exports.filter = function(source, fnBool) {
 	return output;
 };
 
-exports.filterMap = function(source, fnMap, fnFilter) {
+exports.filterMap = function(source, fnMap = val => val, fnBool = () => true) {
 	const output = new source.constructor();
 	for(const key in source) {
-		if(fnFilter(source[key])) {
+		if(!exports.hasOwnProperty(source, key)) continue;
+		if(fnBool(source[key])) {
 			Object.assign(output, { [key]: fnMap(source[key]) });
 		}
 	}
 	return output;
 };
 
-exports.mapDeep = function(source, fnMap) {
+exports.mapDeep = function(source, fnMap = val => val) {
 	const output = new source.constructor();
 	for(const key in source) {
+		if(!exports.hasOwnProperty(source, key)) continue;
 		if(isObject(source[key])) {
 			output[key] = exports.mapDeep(source[key], fnMap);
 		} else {
@@ -153,9 +161,10 @@ exports.mapDeep = function(source, fnMap) {
 	return output;
 };
 
-exports.mapKeys = function(source, fnMap) {
+exports.mapKeys = function(source, fnMap = val => val) {
 	const output = new source.constructor();
 	for(const key in source) {
+		if(!exports.hasOwnProperty(source, key)) continue;
 		const newKey = fnMap(key);
 		if(newKey !== undefined) {
 			Object.assign(output, { [newKey]: source[key] });
@@ -166,9 +175,10 @@ exports.mapKeys = function(source, fnMap) {
 	return output;
 };
 
-exports.filterKeys = function(source, fnBool) {
+exports.filterKeys = function(source, fnBool = () => true) {
 	const output = new source.constructor();
 	for(const key in source) {
+		if(!exports.hasOwnProperty(source, key)) continue;
 		if(fnBool(key)) {
 			Object.assign(output, { [key]: source[key] });
 		}
@@ -176,9 +186,10 @@ exports.filterKeys = function(source, fnBool) {
 	return output;
 };
 
-exports.filterMapKeys = function(source, fnMap, fnBool) {
+exports.filterMapKeys = function(source, fnMap = val => val, fnBool = () => true) {
 	const output = new source.constructor();
 	for(const key in source) {
+		if(!exports.hasOwnProperty(source, key)) continue;
 		const newKey = fnMap(key);
 		if(fnBool(key)) {
 			Object.assign(output, { [newKey]: source[key] });
@@ -190,6 +201,7 @@ exports.filterMapKeys = function(source, fnMap, fnBool) {
 exports.mapInKeys = function(source, keyMap = {}) {
 	const output = new source.constructor();
 	for(const key in source) {
+		if(!exports.hasOwnProperty(source, key)) continue;
 		if(key in keyMap) {
 			Object.assign(output, { [keyMap[key]]: source[key] });
 		} else {
@@ -202,6 +214,7 @@ exports.mapInKeys = function(source, keyMap = {}) {
 exports.filterInKeys = function(source, keyMap = {}) {
 	const output = new source.constructor();
 	for(const key in source) {
+		if(!exports.hasOwnProperty(source, key)) continue;
 		if(key in keyMap) {
 			Object.assign(output, { [key]: source[key] });
 		}
@@ -212,6 +225,7 @@ exports.filterInKeys = function(source, keyMap = {}) {
 exports.filterMapInKeys = function(source, keyMap = {}) {
 	const output = new source.constructor();
 	for(const key in source) {
+		if(!exports.hasOwnProperty(source, key)) continue;
 		if(key in keyMap) {
 			Object.assign(output, { [keyMap[key]]: source[key] });
 		}
@@ -222,6 +236,7 @@ exports.filterMapInKeys = function(source, keyMap = {}) {
 exports.filterDeep = function(source, fnBool) {
 	const output = new source.constructor();
 	for(const key in source) {
+		if(!exports.hasOwnProperty(source, key)) continue;
 		if(isObject(source[key])) {
 			output[key] = exports.filterDeep(source[key], fnBool);
 		} else if(fnBool(source[key])) {
@@ -234,6 +249,7 @@ exports.filterDeep = function(source, fnBool) {
 exports.filterMapDeep = function(source, fnMap, fnBool) {
 	const output = new source.constructor();
 	for(const key in source) {
+		if(!exports.hasOwnProperty(source, key)) continue;
 		if(isObject(source[key])) {
 			output[key] = exports.filterMapDeep(source[key], fnBool);
 		} else if(fnBool(source[key])) {
@@ -251,6 +267,7 @@ exports.flattenObject = function(source) {
 	const result = new source.constructor();
 
 	for(const key in source) {
+		if(!exports.hasOwnProperty(source, key)) continue;
 		if(isObject(source[key])) {
 			const flatObject = exports.flattenObject(source[key]);
 			for(const fkey in flatObject) {
