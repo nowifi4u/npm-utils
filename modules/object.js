@@ -54,7 +54,7 @@ function _impl_assignDeepCheck(target, source) {
 exports.assignDeepCheck = function(target, ...sources) {
 	sources.forEach(source => {
 		if(isObject(source)) {
-			_impl_assignDeepCheck(target, sources);
+			_impl_assignDeepCheck(target, source);
 		}
 	});
 
