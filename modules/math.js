@@ -32,16 +32,14 @@ exports.cycleClamp = function(val, min, max) {
 	if(val < min) {
 		const dist = min - val;
 		const size = max - min;
-		const loops = dist / size;
-		const delta = loops - Math.floor(loops);
-		return max - (delta * size);
+		const delta = dist % size;
+		return max - delta;
 	}
 	if(val > max) {
 		const dist = val - max;
 		const size = max - min;
-		const loops = dist / size;
-		const delta = loops - Math.floor(loops);
-		return min + (delta * size);
+		const delta = dist % size;
+		return min + delta;
 	}
 	return val;
 };
