@@ -22,12 +22,24 @@ exports.mapFunctionRange = function(fn, min1, max1, min2, max2) {
 	return (...params) => exports.mapRange(fn(...params), min1, max1, min2, max2);
 };
 
+/**
+ * @param {number} val - Value to be clamped
+ * @param {number} min - Minimum bound of clamping
+ * @param {number} max - Maximum bound of clamping
+ * @returns {number}
+ */
 exports.clamp = function(val, min, max) {
 	if(val < min) return min;
 	if(val > max) return max;
 	return val;
 };
 
+/**
+ * @param {number} val - Value to be clamped
+ * @param {number} min - Minimum bound of clamping
+ * @param {number} max - Maximum bound of clamping
+ * @returns {number}
+ */
 exports.cycleClamp = function(val, min, max) {
 	if(val < min) {
 		const dist = min - val;
