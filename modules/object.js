@@ -1,5 +1,6 @@
-/* eslint-disable eqeqeq */
+/* eslint-disable no-prototype-builtins */
 function isObject(obj) {
+	// eslint-disable-next-line eqeqeq
 	return obj != null && typeof obj === 'object' && !Array.isArray(obj);
 }
 
@@ -7,6 +8,7 @@ exports.hasOwnProperty = function(target, key) {
 	return Object.prototype.hasOwnProperty.call(target, key);
 };
 
+// eslint-disable-next-line camelcase
 function _impl_assignDeep(target, source) {
 	for(const key in source) {
 		if(!exports.hasOwnProperty(source, key)) continue;
@@ -34,6 +36,7 @@ exports.assignDeep = function(target, ...sources) {
 	return target;
 };
 
+// eslint-disable-next-line camelcase
 function _impl_assignDeepCheck(target, source) {
 	for(const key in source) {
 		if(!exports.hasOwnProperty(source, key)) continue;
@@ -260,6 +263,7 @@ exports.filterMapDeep = function(source, fnMap, fnBool) {
 };
 
 exports.cleanupDeep = function(source) {
+	// eslint-disable-next-line eqeqeq
 	return exports.filterDeep(source, val => val != null);
 };
 
@@ -295,6 +299,7 @@ exports.setValRecursive = function(obj, val, key1, ...keys) {
 		return;
 	}
 
+	// eslint-disable-next-line eqeqeq
 	if(obj[key1] == null) obj[key1] = {};
 
 	exports.setValRecursive(obj[key1], val, ...keys);
@@ -312,6 +317,7 @@ exports.getValRecursive = function(obj, key1, ...keys) {
 		return obj[key1];
 	}
 
+	// eslint-disable-next-line eqeqeq
 	if(obj[key1] == null) return undefined;
 
 	return exports.getValRecursive(obj[key1], ...keys);
@@ -322,6 +328,7 @@ exports.delValRecursive = function(obj, key1, ...keys) {
 		return delete obj[key1];
 	}
 
+	// eslint-disable-next-line eqeqeq
 	if(obj[key1] == null) return false;
 
 	return exports.delValRecursive(obj[key1], ...keys);
