@@ -345,6 +345,32 @@ exports.forEach = function(obj, func) {
 };
 
 /**
+ * Traverses the object.
+ * @param {Object} obj Object to traverse
+ * @param {Function} func Function to apply
+ */
+exports.forEachAsync = async function(obj, func) {
+	for(const key in obj) {
+		if(exports.hasOwnProperty(obj, key)) {
+			// eslint-disable-next-line no-await-in-loop
+			await func(obj[key], key);
+		}
+	}
+};
+
+/**
+ * Traverses the object.
+ * @param {Object} obj Object to traverse
+ * @param {Function} func Function to apply
+ */
+exports.forEachOfAsync = async function(obj, func) {
+	for(const val of obj) {
+		// eslint-disable-next-line no-await-in-loop
+		await func(val);
+	}
+};
+
+/**
  *
  * @param {Object} obj Object to traverse
  * @param {Function} func Function to apply
