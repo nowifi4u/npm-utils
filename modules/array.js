@@ -1,3 +1,14 @@
+/**
+ * @param {any[]} arr - Array to be forEach'd
+ * @param {Function} func - Function to pass the array values to
+ */
+exports.forEachAsync = async function(arr, func) {
+	for(let idx = 0; idx < arr.length; idx++) {
+		// eslint-disable-next-line no-await-in-loop
+		await func(arr[idx], idx);
+	}
+};
+
 exports.makeGenerator = function*(arr) {
 	yield* arr;
 };
