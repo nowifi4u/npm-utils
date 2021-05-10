@@ -329,17 +329,13 @@ exports.delValRecursive = function(obj, key1, ...keys) {
 
 /**
  * Traverses the object.
- * If function returns a non-undefined value sets its value to the result of the function
  * @param {Object} obj Object to traverse
  * @param {Function} func Function to apply
  */
 exports.forEach = function(obj, func) {
 	for(const key in obj) {
 		if(exports.hasOwnProperty(obj, key)) {
-			const result = func(key, obj[key]);
-			if(result !== undefined) {
-				obj[key] = result;
-			}
+			func(obj[key], key);
 		}
 	}
 };
