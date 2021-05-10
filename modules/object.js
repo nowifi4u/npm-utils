@@ -42,6 +42,7 @@ function _impl_assignDeepCheck(target, source) {
 		if(!exports.hasOwnProperty(source, key)) continue;
 		if(isObject(source[key])) {
 			if(!(key in target)) {
+				// eslint-disable-next-line max-depth, max-len, max-depth
 				if(!isObject(target[key]) && target[key] !== undefined) throw new Error('Source value is object when target value is not');
 				Object.assign(target, { [key]: source[key] });
 			} else {
@@ -104,6 +105,7 @@ exports.mergeDeepCheck = function(...sources) {
 				if(!exports.hasOwnProperty(source, key)) continue;
 				if(isObject(source[key])) {
 					if(!(key in output)) {
+						// eslint-disable-next-line max-depth, max-len, max-depth
 						if(!isObject(output[key]) && output[key] !== undefined) throw new Error('Source value is object when target value is not');
 						Object.assign(output, { [key]: source[key] });
 					} else {
