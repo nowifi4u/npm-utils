@@ -30,6 +30,7 @@ exports.forEachLimited = function(gen, func, limit = Infinity) {
 	let val = gen.next();
 	for(let idx = 0; idx < limit && !val.done; idx++) {
 		func(val.value, idx);
+		val = gen.next();
 	}
 };
 
