@@ -392,3 +392,45 @@ exports.forEachVarRecursiveDepth = function(obj, func, depth = 0) {
 		}
 	}
 };
+
+exports.objectToMap = function(obj = {}) {
+	const map = new Map();
+	for(const key in obj) {
+		const val = obj[key];
+		map.set(key, val);
+	}
+	return map;
+};
+
+exports.deepObjectToMap = function(obj = {}) {
+	const map = new Map();
+	for(const key in obj) {
+		const val = obj[key];
+		if(isObject(val)) {
+			map.set(key, exports.deepObjectToMap(val));
+		} else {
+			map.set(key, val);
+		}
+	}
+	return map;
+};
+
+exports.mapToObject = function(map = new Map()) {
+	const obj = {};
+	for(const [key, val] of map) {
+		obj[key] = val;
+	}
+	return obj;
+};
+
+exports.deepMapToObject = function(map = new Map()) {
+	const obj = {};
+	for(const [key, val] of map) {
+		if(val instanceof Map) {
+			obj[key] = exports.deepMapToObject(val);
+		} else {
+			obj[key] = val;
+		}
+	}
+	return obj;
+};
