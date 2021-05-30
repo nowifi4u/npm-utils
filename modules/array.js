@@ -139,6 +139,3 @@ function* _impl_allPossibleChunksLittleBigGeneratorReverse(arr = [], istart = 0,
 exports.allPossibleChunksLittleBigGeneratorReverse = function*(arr = [], istart = 0) {
 	yield* _impl_allPossibleChunksLittleBigGeneratorReverse(arr, istart);
 };
-
-const gen = exports.allPossibleChunksBigLittleGeneratorReverse([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-require('./generator').forEach(gen, val => console.log(JSON.stringify(val)));
