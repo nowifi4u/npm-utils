@@ -4,29 +4,33 @@ function isObject(obj) {
 	return obj != null && typeof obj === 'object' && !Array.isArray(obj);
 }
 
-exports.hasOwnProperty = function(target, key) {
+function hasOwnProperty(target, key) {
 	return Object.prototype.hasOwnProperty.call(target, key);
-};
+}
+
+function assign(target, ...sources) {
+	return assign(target, ...sources);
+}
 
 // eslint-disable-next-line camelcase
 function _impl_assignDeep(target, source) {
 	for(const key in source) {
-		if(!exports.hasOwnProperty(source, key)) continue;
+		if(!hasOwnProperty(source, key)) continue;
 		if(isObject(source[key])) {
 			if(!(key in target)) {
-				Object.assign(target, { [key]: source[key] });
+				assign(target, { [key]: source[key] });
 			} else {
 				_impl_assignDeep(target[key], source[key]);
 			}
 		} else {
-			Object.assign(target, { [key]: source[key] });
+			assign(target, { [key]: source[key] });
 		}
 	}
 
 	return target;
 }
 
-exports.assignDeep = function(target, ...sources) {
+function assignDeep(target, ...sources) {
 	sources.forEach(source => {
 		if(isObject(source)) {
 			_impl_assignDeep(target, source);
@@ -34,28 +38,28 @@ exports.assignDeep = function(target, ...sources) {
 	});
 
 	return target;
-};
+}
 
 // eslint-disable-next-line camelcase
 function _impl_assignDeepCheck(target, source) {
 	for(const key in source) {
-		if(!exports.hasOwnProperty(source, key)) continue;
+		if(!hasOwnProperty(source, key)) continue;
 		if(isObject(source[key])) {
 			if(!(key in target)) {
 				// eslint-disable-next-line max-depth, max-len, max-depth
 				if(!isObject(target[key]) && target[key] !== undefined) throw new Error('Source value is object when target value is not');
-				Object.assign(target, { [key]: source[key] });
+				assign(target, { [key]: source[key] });
 			} else {
 				_impl_assignDeepCheck(target[key], source[key]);
 			}
 		} else {
 			if(isObject(target[key])) throw new Error('Source value is not object when target value is');
-			Object.assign(target, { [key]: source[key] });
+			assign(target, { [key]: source[key] });
 		}
 	}
 }
 
-exports.assignDeepCheck = function(target, ...sources) {
+function assignDeepCheck(target, ...sources) {
 	sources.forEach(source => {
 		if(isObject(source)) {
 			_impl_assignDeepCheck(target, source);
@@ -63,230 +67,195 @@ exports.assignDeepCheck = function(target, ...sources) {
 	});
 
 	return target;
-};
+}
 
-exports.merge = function(...sources) {
+function merge(...sources) {
 	const output = {};
 	sources.forEach(source => {
 		if(isObject(source)) {
-			Object.assign(output, source);
+			assign(output, source);
 		}
 	});
 	return output;
-};
+}
 
-exports.mergeDeep = function(...sources) {
+function mergeDeep(...sources) {
 	const output = {};
 	sources.forEach(source => {
 		if(isObject(source)) {
 			for(const key in source) {
-				if(!exports.hasOwnProperty(source, key)) continue;
+				if(!hasOwnProperty(source, key)) continue;
 				if(isObject(source[key])) {
 					if(!(key in output)) {
-						Object.assign(output, { [key]: source[key] });
+						assign(output, { [key]: source[key] });
 					} else {
-						exports.assignDeep(output[key], source[key]);
+						assignDeep(output[key], source[key]);
 					}
 				} else {
-					Object.assign(output, { [key]: source[key] });
+					assign(output, { [key]: source[key] });
 				}
 			}
 		}
 	});
 
 	return output;
-};
+}
 
-exports.mergeDeepCheck = function(...sources) {
+function mergeDeepCheck(...sources) {
 	const output = {};
 	sources.forEach(source => {
 		if(isObject(source)) {
 			for(const key in source) {
-				if(!exports.hasOwnProperty(source, key)) continue;
+				if(!hasOwnProperty(source, key)) continue;
 				if(isObject(source[key])) {
 					if(!(key in output)) {
 						// eslint-disable-next-line max-depth, max-len, max-depth
 						if(!isObject(output[key]) && output[key] !== undefined) throw new Error('Source value is object when target value is not');
-						Object.assign(output, { [key]: source[key] });
+						assign(output, { [key]: source[key] });
 					} else {
-						exports.assignDeepCheck(source[key], source[key]);
+						assignDeepCheck(source[key], source[key]);
 					}
 				} else {
 					if(isObject(output[key])) throw new Error('Source value is not object when target value is');
-					Object.assign(output, { [key]: source[key] });
+					assign(output, { [key]: source[key] });
 				}
 			}
 		}
 	});
 
 	return output;
-};
+}
 
-exports.map = function(source, fnMap = val => val) {
+function map(source, mapper = val => val) {
 	const output = new source.constructor();
 	for(const key in source) {
-		if(!exports.hasOwnProperty(source, key)) continue;
-		Object.assign(output, { [key]: fnMap(source[key], key) });
+		if(!hasOwnProperty(source, key)) continue;
+		assign(output, { [key]: mapper(source[key], key) });
 	}
 	return output;
-};
+}
 
-exports.filter = function(source, fnBool = () => true) {
+function filter(source, filterer = () => true) {
 	const output = new source.constructor();
 	for(const key in source) {
-		if(!exports.hasOwnProperty(source, key)) continue;
-		if(fnBool(source[key])) {
-			Object.assign(output, { [key]: source[key] });
+		if(!hasOwnProperty(source, key)) continue;
+		if(filterer(source[key])) {
+			assign(output, { [key]: source[key] });
 		}
 	}
 	return output;
-};
+}
 
-exports.filterMap = function(source, fnMap = val => val, fnBool = () => true) {
+function filterMap(source, mapper = val => val, filterer = () => true) {
 	const output = new source.constructor();
 	for(const key in source) {
-		if(!exports.hasOwnProperty(source, key)) continue;
-		if(fnBool(source[key])) {
-			Object.assign(output, { [key]: fnMap(source[key], key) });
+		if(!hasOwnProperty(source, key)) continue;
+		if(filterer(source[key])) {
+			assign(output, { [key]: mapper(source[key], key) });
 		}
 	}
 	return output;
-};
+}
 
-exports.mapDeep = function(source, fnMap = val => val) {
+function mapKeys(source, fnMap = val => val) {
 	const output = new source.constructor();
 	for(const key in source) {
-		if(!exports.hasOwnProperty(source, key)) continue;
-		if(isObject(source[key])) {
-			output[key] = exports.mapDeep(source[key], fnMap);
-		} else {
-			Object.assign(output, { [key]: fnMap(source[key], key) });
-		}
-	}
-	return output;
-};
-
-exports.mapKeys = function(source, fnMap = val => val) {
-	const output = new source.constructor();
-	for(const key in source) {
-		if(!exports.hasOwnProperty(source, key)) continue;
+		if(!hasOwnProperty(source, key)) continue;
 		const newKey = fnMap(key);
 		if(newKey !== undefined) {
-			Object.assign(output, { [newKey]: source[key] });
+			assign(output, { [newKey]: source[key] });
 		} else {
-			Object.assign(output, { [key]: source[key] });
+			assign(output, { [key]: source[key] });
 		}
 	}
 	return output;
-};
+}
 
-exports.filterKeys = function(source, fnBool = () => true) {
+function filterKeys(source, fnBool = () => true) {
 	const output = new source.constructor();
 	for(const key in source) {
-		if(!exports.hasOwnProperty(source, key)) continue;
+		if(!hasOwnProperty(source, key)) continue;
 		if(fnBool(key)) {
-			Object.assign(output, { [key]: source[key] });
+			assign(output, { [key]: source[key] });
 		}
 	}
 	return output;
-};
+}
 
-exports.filterMapKeys = function(source, fnMap = val => val, fnBool = () => true) {
+function filterMapKeys(source, fnMap = val => val, fnBool = () => true) {
 	const output = new source.constructor();
 	for(const key in source) {
-		if(!exports.hasOwnProperty(source, key)) continue;
+		if(!hasOwnProperty(source, key)) continue;
 		const newKey = fnMap(key);
 		if(fnBool(key)) {
-			Object.assign(output, { [newKey]: source[key] });
+			assign(output, { [newKey]: source[key] });
 		}
 	}
 	return output;
-};
+}
 
-exports.mapInKeys = function(source, keyMap = {}) {
+function mapDeep(source, mapper = val => val) {
 	const output = new source.constructor();
 	for(const key in source) {
-		if(!exports.hasOwnProperty(source, key)) continue;
-		if(key in keyMap) {
-			Object.assign(output, { [keyMap[key]]: source[key] });
+		if(!hasOwnProperty(source, key)) continue;
+		if(isObject(source[key])) {
+			output[key] = mapDeep(source[key], mapper);
 		} else {
-			Object.assign(output, { [key]: source[key] });
+			assign(output, { [key]: mapper(source[key], key) });
 		}
 	}
 	return output;
-};
+}
 
-exports.filterInKeys = function(source, keyMap = {}) {
+function filterDeep(source, fnBool) {
 	const output = new source.constructor();
 	for(const key in source) {
-		if(!exports.hasOwnProperty(source, key)) continue;
-		if(key in keyMap) {
-			Object.assign(output, { [key]: source[key] });
-		}
-	}
-	return output;
-};
-
-exports.filterMapInKeys = function(source, keyMap = {}) {
-	const output = new source.constructor();
-	for(const key in source) {
-		if(!exports.hasOwnProperty(source, key)) continue;
-		if(key in keyMap) {
-			Object.assign(output, { [keyMap[key]]: source[key] });
-		}
-	}
-	return output;
-};
-
-exports.filterDeep = function(source, fnBool) {
-	const output = new source.constructor();
-	for(const key in source) {
-		if(!exports.hasOwnProperty(source, key)) continue;
+		if(!hasOwnProperty(source, key)) continue;
 		if(isObject(source[key])) {
-			output[key] = exports.filterDeep(source[key], fnBool);
+			output[key] = filterDeep(source[key], fnBool);
 		} else if(fnBool(source[key], key)) {
-			Object.assign(output, { [key]: source[key] });
+			assign(output, { [key]: source[key] });
 		}
 	}
 	return output;
-};
+}
 
-exports.filterMapDeep = function(source, fnMap, fnBool) {
+function filterMapDeep(source, fnMap, fnBool) {
 	const output = new source.constructor();
 	for(const key in source) {
-		if(!exports.hasOwnProperty(source, key)) continue;
+		if(!hasOwnProperty(source, key)) continue;
 		if(isObject(source[key])) {
-			output[key] = exports.filterMapDeep(source[key], fnBool);
+			output[key] = filterMapDeep(source[key], fnBool);
 		} else if(fnBool(source[key])) {
-			Object.assign(output, { [key]: fnMap(source[key], key) });
+			assign(output, { [key]: fnMap(source[key], key) });
 		}
 	}
 	return output;
-};
+}
 
-exports.cleanupDeep = function(source) {
+function cleanupDeep(source) {
 	// eslint-disable-next-line eqeqeq
-	return exports.filterDeep(source, val => val != null);
-};
+	return filterDeep(source, val => val != null);
+}
 
-exports.flattenObject = function(source) {
+function flatten(source, joinkey = '.') {
 	const result = new source.constructor();
 
 	for(const key in source) {
-		if(!exports.hasOwnProperty(source, key)) continue;
+		if(!hasOwnProperty(source, key)) continue;
 		if(isObject(source[key])) {
-			const flatObject = exports.flattenObject(source[key]);
+			const flatObject = flatten(source[key], joinkey);
 			for(const fkey in flatObject) {
-				if(!exports.hasOwnProperty(flatObject, fkey)) continue;
+				if(!hasOwnProperty(flatObject, fkey)) continue;
 
-				result[`${key}.${fkey}`] = flatObject[fkey];
+				result[`${key}${joinkey}${fkey}`] = flatObject[fkey];
 			}
 		} else {
 			result[key] = source[key];
 		}
 	}
 	return result;
-};
+}
 
 /**
  *
@@ -295,7 +264,7 @@ exports.flattenObject = function(source) {
  * @param {any} key1 First key
  * @param  {...any} keys Other keys
  */
-exports.setValRecursive = function(obj, val, key1, ...keys) {
+function setValRecursive(obj, val, key1, ...keys) {
 	if(keys.length === 0) {
 		obj[key1] = val;
 		return;
@@ -304,8 +273,8 @@ exports.setValRecursive = function(obj, val, key1, ...keys) {
 	// eslint-disable-next-line eqeqeq
 	if(obj[key1] == null) obj[key1] = {};
 
-	exports.setValRecursive(obj[key1], val, ...keys);
-};
+	setValRecursive(obj[key1], val, ...keys);
+}
 
 /**
  *
@@ -314,7 +283,7 @@ exports.setValRecursive = function(obj, val, key1, ...keys) {
  * @param {...string} keys Other keys
  * @returns {any}
  */
-exports.getValRecursive = function(obj, key1, ...keys) {
+function getValRecursive(obj, key1, ...keys) {
 	if(keys.length === 0) {
 		return obj[key1];
 	}
@@ -322,10 +291,10 @@ exports.getValRecursive = function(obj, key1, ...keys) {
 	// eslint-disable-next-line eqeqeq
 	if(obj[key1] == null) return undefined;
 
-	return exports.getValRecursive(obj[key1], ...keys);
-};
+	return getValRecursive(obj[key1], ...keys);
+}
 
-exports.delValRecursive = function(obj, key1, ...keys) {
+function delValRecursive(obj, key1, ...keys) {
 	if(keys.length === 0) {
 		return delete obj[key1];
 	}
@@ -333,47 +302,35 @@ exports.delValRecursive = function(obj, key1, ...keys) {
 	// eslint-disable-next-line eqeqeq
 	if(obj[key1] == null) return false;
 
-	return exports.delValRecursive(obj[key1], ...keys);
-};
+	return delValRecursive(obj[key1], ...keys);
+}
 
 /**
  * Traverses the object.
  * @param {Object} obj Object to traverse
  * @param {Function} func Function to apply
  */
-exports.forEach = function(obj, func) {
+function forEach(obj, func) {
 	for(const key in obj) {
-		if(exports.hasOwnProperty(obj, key)) {
+		if(hasOwnProperty(obj, key)) {
 			func(obj[key], key);
 		}
 	}
-};
+}
 
 /**
  * Traverses the object.
  * @param {Object} obj Object to traverse
  * @param {Function} func Function to apply
  */
-exports.forEachAsync = async function(obj, func) {
+async function forEachAsync(obj, func) {
 	for(const key in obj) {
-		if(exports.hasOwnProperty(obj, key)) {
+		if(hasOwnProperty(obj, key)) {
 			// eslint-disable-next-line no-await-in-loop
 			await func(obj[key], key);
 		}
 	}
-};
-
-/**
- * Traverses the object.
- * @param {Object} obj Object to traverse
- * @param {Function} func Function to apply
- */
-exports.forEachOfAsync = async function(obj, func) {
-	for(const val of obj) {
-		// eslint-disable-next-line no-await-in-loop
-		await func(val);
-	}
-};
+}
 
 /**
  *
@@ -381,47 +338,79 @@ exports.forEachOfAsync = async function(obj, func) {
  * @param {Function} func Function to apply
  * @param {number} depth Depth of traversal
  */
-exports.forEachVarRecursiveDepth = function(obj, func, depth = 0) {
+function forEachAtDepth(obj, func, depth = 0) {
 	if(depth <= 0) {
-		exports.forEach(obj, func);
+		forEach(obj, func);
 	} else {
 		for(const key in obj) {
 			if(isObject(obj[key])) {
-				exports.forEachVarRecursiveDepth(obj[key], func, depth - 1);
+				forEachAtDepth(obj[key], func, depth - 1);
 			}
 		}
 	}
-};
+}
 
-exports.objectToMap = function(obj = {}) {
+function toMap(obj = {}) {
 	return new Map(Object.entries(obj));
-};
+}
 
-exports.deepObjectToMap = function(obj = {}) {
-	const map = new Map();
+function toMapDeep(obj = {}) {
+	const _map = new Map();
 	for(const key in obj) {
 		const val = obj[key];
 		if(isObject(val)) {
-			map.set(key, exports.deepObjectToMap(val));
+			_map.set(key, toMapDeep(val));
 		} else {
-			map.set(key, val);
+			_map.set(key, val);
 		}
 	}
-	return map;
-};
+	return _map;
+}
 
-exports.mapToObject = function(map = new Map()) {
-	return Object.fromEntries(map.entries());
-};
+function fromMap(_map = new Map()) {
+	return Object.fromEntries(_map.entries());
+}
 
-exports.deepMapToObject = function(map = new Map()) {
+function fromMapDeep(_map = new Map()) {
 	const obj = {};
-	for(const [key, val] of map) {
+	for(const [key, val] of _map) {
 		if(val instanceof Map) {
-			obj[key] = exports.deepMapToObject(val);
+			obj[key] = fromMapDeep(val);
 		} else {
 			obj[key] = val;
 		}
 	}
 	return obj;
+}
+
+module.exports = {
+	isObject,
+	hasOwnProperty,
+	assign,
+	assignDeep,
+	assignDeepCheck,
+	merge,
+	mergeDeep,
+	mergeDeepCheck,
+	map,
+	filter,
+	filterMap,
+	mapKeys,
+	filterKeys,
+	filterMapKeys,
+	mapDeep,
+	filterDeep,
+	filterMapDeep,
+	cleanupDeep,
+	flatten,
+	getValRecursive,
+	setValRecursive,
+	delValRecursive,
+	forEach,
+	forEachAsync,
+	forEachAtDepth,
+	toMap,
+	toMapDeep,
+	fromMap,
+	fromMapDeep
 };
