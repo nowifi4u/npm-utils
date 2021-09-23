@@ -9,7 +9,7 @@ function hasOwnProperty(target, key) {
 }
 
 function assign(target, ...sources) {
-	return assign(target, ...sources);
+	return Object.assign(target, ...sources);
 }
 
 // eslint-disable-next-line camelcase
