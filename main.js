@@ -1,5 +1,5 @@
-exports.array = require('./modules/array');
-exports.generator = require('./modules/generator');
-exports.math = require('./modules/math');
-exports.object = require('./modules/object');
-exports.onexit = require('./modules/onexit');
+exports.ArrayUtils = require('./modules/array');
+exports.GeneratorUtils = require('./modules/generator');
+exports.MathUtils = require('./modules/math');
+exports.ObjectUtils = require('./modules/object');
+exports.OnexitHandler = require('./modules/onexit');
