@@ -127,7 +127,7 @@ function mergeDeepCheck(...sources) {
 }
 
 function map(source, mapper = val => val) {
-	const output = new source.constructor();
+	const output = {};
 	for(const key in source) {
 		if(!hasOwnProperty(source, key)) continue;
 		assign(output, { [key]: mapper(source[key], key) });
@@ -136,7 +136,7 @@ function map(source, mapper = val => val) {
 }
 
 function filter(source, filterer = () => true) {
-	const output = new source.constructor();
+	const output = {};
 	for(const key in source) {
 		if(!hasOwnProperty(source, key)) continue;
 		if(filterer(source[key])) {
@@ -147,7 +147,7 @@ function filter(source, filterer = () => true) {
 }
 
 function filterMap(source, mapper = val => val, filterer = () => true) {
-	const output = new source.constructor();
+	const output = {};
 	for(const key in source) {
 		if(!hasOwnProperty(source, key)) continue;
 		if(filterer(source[key])) {
@@ -158,7 +158,7 @@ function filterMap(source, mapper = val => val, filterer = () => true) {
 }
 
 function mapKeys(source, fnMap = val => val) {
-	const output = new source.constructor();
+	const output = {};
 	for(const key in source) {
 		if(!hasOwnProperty(source, key)) continue;
 		const newKey = fnMap(key);
@@ -172,7 +172,7 @@ function mapKeys(source, fnMap = val => val) {
 }
 
 function filterKeys(source, fnBool = () => true) {
-	const output = new source.constructor();
+	const output = {};
 	for(const key in source) {
 		if(!hasOwnProperty(source, key)) continue;
 		if(fnBool(key)) {
@@ -183,7 +183,7 @@ function filterKeys(source, fnBool = () => true) {
 }
 
 function filterMapKeys(source, fnMap = val => val, fnBool = () => true) {
-	const output = new source.constructor();
+	const output = {};
 	for(const key in source) {
 		if(!hasOwnProperty(source, key)) continue;
 		const newKey = fnMap(key);
@@ -195,7 +195,7 @@ function filterMapKeys(source, fnMap = val => val, fnBool = () => true) {
 }
 
 function mapDeep(source, mapper = val => val) {
-	const output = new source.constructor();
+	const output = {};
 	for(const key in source) {
 		if(!hasOwnProperty(source, key)) continue;
 		if(isObject(source[key])) {
@@ -208,7 +208,7 @@ function mapDeep(source, mapper = val => val) {
 }
 
 function filterDeep(source, fnBool) {
-	const output = new source.constructor();
+	const output = {};
 	for(const key in source) {
 		if(!hasOwnProperty(source, key)) continue;
 		if(isObject(source[key])) {
@@ -221,7 +221,7 @@ function filterDeep(source, fnBool) {
 }
 
 function filterMapDeep(source, fnMap, fnBool) {
-	const output = new source.constructor();
+	const output = {};
 	for(const key in source) {
 		if(!hasOwnProperty(source, key)) continue;
 		if(isObject(source[key])) {
@@ -239,7 +239,7 @@ function cleanupDeep(source) {
 }
 
 function flatten(source, joinkey = '.') {
-	const result = new source.constructor();
+	const result = {};
 
 	for(const key in source) {
 		if(!hasOwnProperty(source, key)) continue;
